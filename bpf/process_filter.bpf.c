@@ -3,6 +3,7 @@
 
 #define TASK_COMM_LEN 16
 #define AF_INET 2
+#define AF_INET6 10
 
 struct process_config { __u16 port; char comm[TASK_COMM_LEN]; };
 
@@ -21,7 +22,8 @@ int filter_process_egress(struct __sk_buff *skb)
 	char comm[TASK_COMM_LEN] = {};
 	int i;
 
-	if (!cfg || skb->protocol != bpf_htons(ETH_P_IP) || skb->family != AF_INET)
+	if (!cfg || skb->protocol != bpf_htons(ETH_P_IP) ||
+		(skb->family != AF_INET && skb->family != AF_INET6))
 		return 1;
 	if (bpf_get_current_comm(&comm, sizeof(comm)) < 0)
 		return 1;

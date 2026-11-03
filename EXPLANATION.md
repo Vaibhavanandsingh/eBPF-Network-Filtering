@@ -12,7 +12,7 @@ The map is the userspace-to-kernel control plane. Change `-port` and restart the
 
 ## Problem 2: process-specific allowlist
 
-`process_filter.bpf.c` is a `cgroup_skb/egress` program. It reads the current task's `comm` (the Linux process name, up to 15 visible bytes) and the destination TCP port from the socket-buffer context. If the process name matches the configured name, only the configured destination port returns `1` (allow); other TCP destinations return `0` (drop). Non-TCP and non-IPv4 traffic is passed through so the demo does not accidentally break unrelated traffic.
+`process_filter.bpf.c` is a `cgroup_skb/egress` program. It reads the current task's `comm` (the Linux process name, up to 15 visible bytes) and the destination TCP port from the socket-buffer context. If the process name matches the configured name, only the configured destination port returns `1` (allow); other TCP destinations return `0` (drop). Non-TCP traffic is passed through so the demo does not accidentally break unrelated traffic; both IPv4 and IPv6 TCP are covered.
 
 The program must be attached to a cgroup containing the target process. This is important: a process name alone is not a globally reliable identity, and inbound packets are often handled by kernel context rather than the receiving userspace task. This implementation deliberately enforces the requirement for the process's outbound TCP traffic, where cgroup egress has the useful current-task context. For production-grade identity, combine cgroups with a policy keyed by cgroup ID, or use an LSM/socket-level design.
 
