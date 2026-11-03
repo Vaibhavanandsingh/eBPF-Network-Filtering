@@ -1,0 +1,4 @@
+bin/
+cmd/drop/drop_bpf*.go
+cmd/process-filter/process_filter_bpf*.go
+.DS_Store
