@@ -14,4 +14,4 @@ build: generate
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -o bin/process-filter ./cmd/process-filter
 
 clean:
-	rm -f bin/drop bin/process-filter cmd/drop/drop_bpf*.go cmd/process-filter/process_filter_bpf*.go
+	rm -f bin/drop bin/process-filter cmd/drop/drop_bpf*.go cmd/process-filter/process_filter_bpf*.go cmd/drop/*.o cmd/process-filter/*.o

@@ -12,17 +12,18 @@ struct {
 	__uint(max_entries, 1);
 	__type(key, __u32);
 	__type(value, struct process_config);
-} process_config SEC(".maps");
+} process_config_map SEC(".maps");
 
 SEC("cgroup_skb/egress")
 int filter_process_egress(struct __sk_buff *skb)
 {
 	__u32 key = 0;
-	struct process_config *cfg = bpf_map_lookup_elem(&process_config, &key);
+	struct process_config *cfg = bpf_map_lookup_elem(&process_config_map, &key);
 	char comm[TASK_COMM_LEN] = {};
 	int i;
 
-	if (!cfg || skb->protocol != bpf_htons(ETH_P_IP) ||
+	if (!cfg || (skb->protocol != bpf_htons(ETH_P_IP) &&
+		skb->protocol != bpf_htons(ETH_P_IPV6)) ||
 		(skb->family != AF_INET && skb->family != AF_INET6))
 		return 1;
 	if (bpf_get_current_comm(&comm, sizeof(comm)) < 0)

@@ -23,15 +23,17 @@ func main() {
 	if *port > 65535 || len(*comm) == 0 || len(*comm) >= 16 {
 		fatal("port must be 0..65535 and comm must be 1..15 bytes")
 	}
-	var objs processFilterObjects
-	if err := loadProcessFilterObjects(&objs, nil); err != nil {
+	var objs process_filterObjects
+	if err := loadProcess_filterObjects(&objs, nil); err != nil {
 		fatal(err)
 	}
 	defer objs.Close()
-	var cfg processFilterProcessConfig
+	var cfg process_filterProcessConfig
 	cfg.Port = uint16(*port)
-	copy(cfg.Comm[:], *comm)
-	if err := objs.ProcessConfig.Put(uint32(0), cfg); err != nil {
+	for i := range *comm {
+		cfg.Comm[i] = int8((*comm)[i])
+	}
+	if err := objs.ProcessConfigMap.Put(uint32(0), cfg); err != nil {
 		fatal(err)
 	}
 	f, err := os.Open(*cgroup)

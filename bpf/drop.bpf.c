@@ -12,7 +12,7 @@ struct {
 	__uint(max_entries, 1);
 	__type(key, __u32);
 	__type(value, struct port_config);
-} port_config SEC(".maps");
+} port_config_map SEC(".maps");
 
 SEC("xdp")
 int drop_tcp_port(struct xdp_md *ctx)
@@ -34,7 +34,7 @@ int drop_tcp_port(struct xdp_md *ctx)
 	if ((void *)(tcp + 1) > end)
 		return XDP_PASS;
 
-	cfg = bpf_map_lookup_elem(&port_config, &key);
+	cfg = bpf_map_lookup_elem(&port_config_map, &key);
 	if (cfg && tcp->dest == bpf_htons(cfg->port))
 		return XDP_DROP;
 	return XDP_PASS;

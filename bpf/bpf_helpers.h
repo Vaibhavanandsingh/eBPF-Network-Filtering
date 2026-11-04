@@ -34,6 +34,7 @@ static long (*bpf_get_current_comm)(void *buf, __u32 size) = (void *)16;
 #define BPF_ANY 0
 #define __always_inline inline __attribute__((always_inline))
 #define ETH_P_IP 0x0800
+#define ETH_P_IPV6 0x86DD
 #define IPPROTO_TCP 6
 #define TC_ACT_OK 0
 #define TC_ACT_SHOT 2

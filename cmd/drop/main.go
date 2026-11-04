@@ -34,7 +34,7 @@ func main() {
 	}
 	defer objs.Close()
 	key := uint32(0)
-	if err := objs.PortConfig.Put(key, dropPortConfig{Port: uint16(*port)}); err != nil {
+	if err := objs.PortConfigMap.Put(key, dropPortConfig{Port: uint16(*port)}); err != nil {
 		fatal(err)
 	}
 	idx, err := interfaceIndex(*iface)
